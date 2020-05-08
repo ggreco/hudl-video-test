@@ -1,0 +1,8 @@
+{
+    "python.pythonPath": "/usr/local/bin/python3",
+    "files.associations": {
+        "fstream": "cpp",
+        "ostream": "cpp",
+        "string_view": "cpp"
+    }
+}

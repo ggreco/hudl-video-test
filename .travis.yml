@@ -1,0 +1,35 @@
+sudo: false
+language: node_js
+node_js:
+- node
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.8
+    - gcc-4.8-multilib
+    - g++-4.8-multilib
+    - gcc-multilib
+    - g++-multilib
+os:
+- linux
+before_install:
+- sudo apt-get install libsdl2-dev
+before_deploy:
+- ARCHIVE_NAME="${TRAVIS_TAG:-latest}-$TRAVIS_OS_NAME-`uname -m`.tar"
+- npm run prebuild
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ARCH=ia32 npm run prebuild; fi
+- ls -R prebuilds
+- echo "Created archive $ARCHIVE_NAME" 
+- tar --create --verbose --file="$ARCHIVE_NAME" --directory prebuilds
+.
+deploy:
+  provider: releases
+  api_key:
+    secure: jV1un/jU2UyqkyGvkh6J4G5bJ5xl2H1MemaDhMg5eKjEsw4aP4ucNjm//h9MpStZMj6Z0w6/GhNkq35p1oEMdnFP6R4nK0Qe4nINm7U1/lJtfmv+YtDyVYcOWW//hhx9Xh5mnwqy9Vi1JeOI0bgSJ+dWvhtXNv4zBHyTL1eIPjjEcoZLoG/XWuNXME4H8J1/6/HvMgHlZ8lYzc86ntfwQTzOVQ4+g6QYe/oEy8tba/KnbIeTBQn/7MJ06exccjSTAmiyQseV8W7fbE/oa4xHJ1IzpRMPl/Q1tXcSyZxjYBqY24E1Tx/YhmoBuWe1jVqgekqdOa+m1tzXkPdDvnt3xhNtBZSYNdgaNESJFwycvRXYdvrq9v2q/0QJIn1oHWOT4veoLVom2kABTkdu8kX9z6V3oRZwdxYv7Y3Wd71AFxmwGdKDM8Nq0+56bRzQm2RVxbAvRoilcskCNy05wfeZcwvsdrwEMk1W5VGZZAZCodlNZQS3MR5Ch4Q8uMLGK95lwZEEOlcBGqtg+EsUbdOltwDMBjMmD2hpjf5CKqDDG1Q0tpCnV+ITTiylBl22pCQ8I1+lNzU7OEFNo+6EW1ceu/obi+IFKeLPGfGamhr1KY4tA888agxckkLVXTp9YzeJIh/D7utmjQQrFH9k+lMGAv6ko0mOnHIilECVXbyRbIQ=
+  file: "$ARCHIVE_NAME"
+  on:
+    tags: true
+    repo: ggreco/wydecoder
+  skip_cleanup: 'true'
