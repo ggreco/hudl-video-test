@@ -1,4 +1,4 @@
-const wyDecoder = require('./build/Release/wydecoder.node');
+const wyDecoder = require('./build/Release/hudl-video-core.node');
 const args = process.argv.slice(2);
 
 console.log(" exports: ", wyDecoder);
